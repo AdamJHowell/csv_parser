@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/source/Adam/CSV_Parser/src/csvparser.c
+stdlib.h
+-
+string.h
+-
+stdio.h
+-
+errno.h
+-
+csvparser.h
+/mnt/c/source/Adam/CSV_Parser/src/csvparser.h
+
+/mnt/c/source/Adam/CSV_Parser/src/csvparser.h
+stdio.h
+-
+
+/mnt/c/source/Adam/CSV_Parser/src/main.c
+stdio.h
+-
+csvparser.h
+/mnt/c/source/Adam/CSV_Parser/src/csvparser.h
+
