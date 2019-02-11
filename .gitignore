@@ -1,5 +1,4 @@
 # Object files
-*.o
 *.ko
 *.obj
 *.elf
@@ -22,7 +21,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 *.i*86
 *.x86_64
@@ -30,9 +28,5 @@
 
 # Debug files
 *.dSYM/
-cmake-build-debug/CMakeFiles/3.10.2/CompilerIdC/tmp/
-cmake-build-debug/CMakeFiles/CMakeTmp/
 cmake-build-debug/
 .idea/
-*.cbp
-*.cmake

@@ -16,6 +16,8 @@ extern "C" {
 CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int firstLineIsHeader )
 {
 	CsvParser * csvParser = ( CsvParser * ) malloc( sizeof( CsvParser ) );
+	unsigned long fileSize;
+	FILE * inBinFilePointer;
 	if( filePath == NULL )
 	{
 		csvParser->filePath_ = NULL;
@@ -26,6 +28,19 @@ CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int fi
 		csvParser->filePath_ = ( char * ) malloc( ( filePathLen + 1 ) );
 		strcpy( csvParser->filePath_, filePath );
 	}
+	if( ( inBinFilePointer = fopen( filePath, "rb" ) ) == NULL )
+	{
+		perror( "Error opening input file in binary mode" );
+		return NULL;
+	}
+	fseek( inBinFilePointer, 0, SEEK_END );					/* Seek to end of file. */
+	fileSize = ( unsigned long ) ftell( inBinFilePointer );	/* Get the file size in bytes. */
+	fseek( inBinFilePointer, 0, SEEK_SET );					/* Rewind file pointer. */
+
+	csvParser->fileBuffer = malloc( fileSize + 1 );			/* Allocate memory for the entire file. */
+	fread( csvParser->fileBuffer, fileSize, 1, inBinFilePointer );		/* Read the entire file into fileBuffer. */
+	fclose( inBinFilePointer );								/* Close the file handle. */
+
 	csvParser->firstLineIsHeader_ = firstLineIsHeader;
 	csvParser->errMsg_ = NULL;
 	if( delimiter == NULL )
