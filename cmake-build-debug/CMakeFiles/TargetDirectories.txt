@@ -1,3 +1,0 @@
-/mnt/c/source/Adam/CSV_Parser/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/source/Adam/CSV_Parser/cmake-build-debug/CMakeFiles/CSV_Parser.dir
-/mnt/c/source/Adam/CSV_Parser/cmake-build-debug/CMakeFiles/edit_cache.dir
