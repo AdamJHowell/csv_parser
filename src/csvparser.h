@@ -26,6 +26,7 @@ typedef struct CsvParser
 	char * csvString_;
 	int csvStringIter_;
 	char * fileBuffer;
+	size_t bufferOffset;
 } CsvParser;
 
 

@@ -13,6 +13,7 @@ extern "C" {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCDFAInspection"
 
+
 CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int firstLineIsHeader )
 {
 	CsvParser * csvParser = ( CsvParser * ) malloc( sizeof( CsvParser ) );
@@ -20,12 +21,11 @@ CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int fi
 	FILE * inBinFilePointer;
 	if( filePath == NULL )
 	{
-		csvParser->filePath_ = NULL;
+		csvParser = NULL;
 	}
 	else
 	{
-		size_t filePathLen = strlen( filePath );
-		csvParser->filePath_ = ( char * ) malloc( ( filePathLen + 1 ) );
+		csvParser->filePath_ = ( char * ) malloc( ( strlen( filePath ) + 1 ) );
 		strcpy( csvParser->filePath_, filePath );
 	}
 	if( ( inBinFilePointer = fopen( filePath, "rb" ) ) == NULL )
@@ -36,10 +36,10 @@ CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int fi
 	fseek( inBinFilePointer, 0, SEEK_END );					/* Seek to end of file. */
 	fileSize = ( unsigned long ) ftell( inBinFilePointer );	/* Get the file size in bytes. */
 	fseek( inBinFilePointer, 0, SEEK_SET );					/* Rewind file pointer. */
-
 	csvParser->fileBuffer = malloc( fileSize + 1 );			/* Allocate memory for the entire file. */
-	fread( csvParser->fileBuffer, fileSize, 1, inBinFilePointer );		/* Read the entire file into fileBuffer. */
+	fread( csvParser->fileBuffer, fileSize, 1, inBinFilePointer );	/* Read the entire file into fileBuffer. */
 	fclose( inBinFilePointer );								/* Close the file handle. */
+	csvParser->bufferOffset = 0;
 
 	csvParser->firstLineIsHeader_ = firstLineIsHeader;
 	csvParser->errMsg_ = NULL;
@@ -65,6 +65,7 @@ CsvParser * CsvParser_new( const char * filePath, const char * delimiter, int fi
 }
 
 #pragma clang diagnostic pop
+
 
 void CsvParser_destroy( CsvParser * csvParser )
 {
@@ -95,6 +96,7 @@ void CsvParser_destroy( CsvParser * csvParser )
 	free( csvParser );
 }
 
+
 void CsvParser_destroy_row( CsvRow * csvRow )
 {
 	int i;
@@ -104,6 +106,7 @@ void CsvParser_destroy_row( CsvRow * csvRow )
 	}
 	free( csvRow );
 }
+
 
 CsvRow * CsvParser_getHeader( CsvParser * csvParser )
 {
@@ -119,6 +122,7 @@ CsvRow * CsvParser_getHeader( CsvParser * csvParser )
 	return csvParser->header_;
 }
 
+
 CsvRow * CsvParser_getRow( CsvParser * csvParser )
 {
 	if( csvParser->firstLineIsHeader_ && csvParser->header_ == NULL )
@@ -128,15 +132,18 @@ CsvRow * CsvParser_getRow( CsvParser * csvParser )
 	return _CsvParser_getRow( csvParser );
 }
 
+
 int CsvParser_getNumFields( CsvRow * csvRow )
 {
 	return csvRow->numOfFields_;
 }
 
+
 char ** CsvParser_getFields( CsvRow * csvRow )
 {
 	return csvRow->fields_;
 }
+
 
 CsvRow * _CsvParser_getRow( CsvParser * csvParser )
 {
@@ -183,7 +190,7 @@ CsvRow * _CsvParser_getRow( CsvParser * csvParser )
 	char * currField = ( char * ) malloc( acceptedCharsInField );
 	int inside_complex_field = 0;
 	size_t currFieldCharIter = 0;
-	int seriesOfQuotesLength = 0;
+	size_t seriesOfQuotesLength = 0;
 	int lastCharIsQuote = 0;
 	int isEndOfFile = 0;
 	while( 1 )
@@ -271,6 +278,7 @@ CsvRow * _CsvParser_getRow( CsvParser * csvParser )
 	}
 }
 
+
 int _CsvParser_delimiterIsAccepted( const char * delimiter )
 {
 	char actualDelimiter = * delimiter;
@@ -280,6 +288,7 @@ int _CsvParser_delimiterIsAccepted( const char * delimiter )
 	}
 	return 1;
 }
+
 
 void _CsvParser_setErrorMessage( CsvParser * csvParser, const char * errorMessage )
 {
@@ -291,6 +300,7 @@ void _CsvParser_setErrorMessage( CsvParser * csvParser, const char * errorMessag
 	csvParser->errMsg_ = ( char * ) malloc( errMsgLen + 1 );
 	strcpy( csvParser->errMsg_, errorMessage );
 }
+
 
 const char * CsvParser_getErrorMessage( CsvParser * csvParser )
 {
